@@ -54,6 +54,48 @@ function printTask(){
   return listaTareas
 }
 
+function esTareaValida(tarea) {
+  return tarea && tarea.descripcion && typeof tarea.completado === "boolean";
+}
+
+function validarTareaMiddleware(req, res, next) {
+  const tarea = req.body;
+
+  if (!tarea) {
+    return res.status(400).json({ error: "Cuerpo de la solicitud vacío" });
+  }
+
+  if (!esTareaValida(tarea)) {
+    return res
+      .status(400)
+      .json({ error: "Información de tarea no válida o faltante" });
+  }
+
+  next();
+}
+function validarMetodoHTTP(req, res, next) {
+  const metodo = req.method;
+
+  const metodosValidos = ["GET", "POST", "PUT", "DELETE"];
+
+  if (!metodosValidos.includes(metodo)) {
+    return res.status(405).json({ error: "Método HTTP no válido" });
+  }
+
+  next();
+}
+
+function validarParametrosMiddleware(req, res, next) {
+  const parametro = req.params.parametro;
+
+  if (parametro === "completas" || parametro === "incompletas") {
+    next();
+  } else {
+    res.status(400).json({ error: "Parámetro no válido" });
+  }
+}
+
+
 module.exports={
   createTask,
   printTask,
@@ -61,5 +103,7 @@ module.exports={
   searchTasksForId,
   tasksListcompleted,
   updteTask,
-  tasksListIncompleted
+  tasksListIncompleted,
+  validarTareaMiddleware,
+  validarParametrosMiddleware
 }
