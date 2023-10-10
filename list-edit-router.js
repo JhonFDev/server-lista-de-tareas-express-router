@@ -1,10 +1,9 @@
-// list-edit-router.js
 const express = require("express");
 const router = express.Router();
 const tasksedits = require("./task");
 
 // Ruta para crear una tarea
-router.post("/crear", (req, res) => {
+router.post("/crear", tasksedits.validarTareaMiddleware, (req, res) => {
 tasksedits.createTask(req.body)
 res.json({
   status: 200,
@@ -13,7 +12,6 @@ res.json({
 })
 });
 
-// Ruta para eliminar una tarea
 router.delete("/eliminar/:id", (req, res) => {
   const idEliminaTask = parseInt(req.params.id)
 const tareaExiste = tasksedits.searchTasksForId(id)
@@ -25,8 +23,7 @@ const tareaExiste = tasksedits.searchTasksForId(id)
   }
 });
 
-// Ruta para actualizar una tarea
-router.put("/update:id", (req, res) => {
+router.put("/update:id", tasksedits.validarTareaMiddleware, (req, res) => {
   const idOfUpdatedTask = parseInt(req.params.id)
   const taskToUpdated = tasksedits.searchTasksForId(id)
   if (!taskToUpdated){

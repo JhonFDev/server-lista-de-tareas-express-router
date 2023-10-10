@@ -14,11 +14,11 @@ router.get("/buscar/:id", (req,res) =>{
 
 
 
-router.get("/incompletas", (req, res) => {
+router.get("/incompletas", tasksviews.validarParametrosMiddleware, (req, res) => {
    res.json(tasksviews.tasksListIncompleted());
 });
 
-router.get("/completas", (req, res) => {
+router.get("/completas", tasksviews.validarParametrosMiddleware, (req, res) => {
    res.json(tasksviews.tasksListcompleted());
 });
 
